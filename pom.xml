@@ -153,6 +153,11 @@
 				<configuration>
 					<source>21</source>
 					<target>21</target>
+					<archive>
+						<manifest>
+							<mainClass>com.ehacdev.flutter_api_java.FlutterApiJavaApplication</mainClass>
+						</manifest>
+					</archive>
 				</configuration>
 			</plugin>
 		</plugins>
