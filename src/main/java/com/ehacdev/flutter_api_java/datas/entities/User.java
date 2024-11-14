@@ -32,8 +32,10 @@ public class User extends BaseEntity implements UserDetails {
     @Column(unique = true, nullable = false)
     private String phoneNumber;
    
+    @Builder.Default
     private boolean isActive = true;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.CLIENT;
     

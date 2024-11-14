@@ -20,27 +20,35 @@ public class ApplicationConfig {
 
     private final UserRespository userRespository;
 
-    @Bean 
-    UserDetailsService userDetailsService(){
+    @Bean
+    UserDetailsService userDetailsService() {
         return username -> userRespository.findByPhoneNumber(username)
-            .orElseThrow(()-> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+    // @Bean
+    // AuthenticationProvider authentificationProvider(){
+    // DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    // authProvider.setUserDetailsService(userDetailsService());
+    // authProvider.setPasswordEncoder(passwordEncoder());
+    // return authProvider;
+    // }
+
     @Bean
-    AuthenticationProvider authentificationProvider(){
+    AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
 
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+    AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 }

@@ -24,5 +24,6 @@ public class Contact extends BaseEntity{
     
     private String email;
     
+    @Builder.Default
     private boolean favorite = false;
 }

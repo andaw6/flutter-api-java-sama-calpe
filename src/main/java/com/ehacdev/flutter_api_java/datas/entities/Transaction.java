@@ -28,8 +28,10 @@ public class Transaction extends BaseEntity{
     @JoinColumn(name = "receiverId")
     private User receiver;
 
+    @Builder.Default
     private double feeAmount = 0;
 
+    @Builder.Default
     private String currency = "XOR";
 
     @Enumerated(EnumType.STRING)

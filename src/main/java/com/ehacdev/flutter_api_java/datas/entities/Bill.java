@@ -26,6 +26,7 @@ public class Bill extends BaseEntity{
 
     private double amount;
 
+    @Builder.Default
     private String currency = "XOR";
 
     @Enumerated(EnumType.STRING)

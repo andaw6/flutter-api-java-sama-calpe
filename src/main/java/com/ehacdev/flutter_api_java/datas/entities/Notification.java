@@ -21,6 +21,7 @@ public class Notification extends BaseEntity{
 
     private String message;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private NotificationStatus isRead = NotificationStatus.UNREAD;
 }

@@ -20,9 +20,13 @@ public class Account extends BaseEntity{
     @JoinColumn(name = "userId", nullable = false, unique = true)
     private User user;
 
+    @Builder.Default
     private double balance = 0;
+    @Builder.Default
     private String currency = "XOR";
     private String qrCode;
+    @Builder.Default
     private boolean isActive = true;
+    @Builder.Default
     private BigDecimal plafond = new BigDecimal("500000");
 }

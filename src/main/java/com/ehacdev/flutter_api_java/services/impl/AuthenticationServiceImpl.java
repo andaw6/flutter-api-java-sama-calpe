@@ -1,14 +1,10 @@
 package com.ehacdev.flutter_api_java.services.impl;
 
-import java.sql.Date;
 import java.util.HashMap;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.security.core.Authentication;
 
 import com.ehacdev.flutter_api_java.datas.entities.BlacklistedToken;
 import com.ehacdev.flutter_api_java.datas.entities.User;
@@ -24,7 +20,6 @@ import com.ehacdev.flutter_api_java.web.dto.response.AuthenticationResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.var;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +36,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         User userRegister = userService.createClient(request);
         accountService.createAccountForUser(userRegister);
-        var jwtToken = jwtService.generateToken(getDataForToken(userRegister), userRegister);
+        String jwtToken = jwtService.generateToken(getDataForToken(userRegister), userRegister);
         return AuthenticationResponseDTO
                 .builder()
                 .token(jwtToken)
@@ -54,7 +49,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         request.getPhone(),
                         request.getPassword()));
         User user = userService.getUserByPhoneNumber(request.getPhone());
-        var jwtToken = jwtService.generateToken(getDataForToken(user), user);
+        String jwtToken = jwtService.generateToken(getDataForToken(user), user);
         return AuthenticationResponseDTO
                 .builder()
                 .token(jwtToken)

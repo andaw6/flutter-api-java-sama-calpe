@@ -1,6 +1,5 @@
 package com.ehacdev.flutter_api_java.web.dto.response;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;

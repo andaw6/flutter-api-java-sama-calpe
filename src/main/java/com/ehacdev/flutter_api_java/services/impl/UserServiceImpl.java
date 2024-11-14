@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     private final AuthService authService;
 
     public User createClient(ClientRegisterRequestDTO request) {
-        var user = User
+        User user = User
                 .builder()
                 .name(request.getName())
                 .email(request.getEmail())
