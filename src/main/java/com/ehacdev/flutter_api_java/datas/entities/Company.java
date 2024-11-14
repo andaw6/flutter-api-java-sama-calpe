@@ -1,6 +1,10 @@
 package com.ehacdev.flutter_api_java.datas.entities;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,6 +15,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@JsonIgnoreProperties({"bills"})
 @Table(name = "companies")
 public class Company extends BaseEntity{
 
@@ -22,5 +27,5 @@ public class Company extends BaseEntity{
     private String icon;
 
     @OneToMany(mappedBy = "company")
-    private List<Bill> bills;
+    private Set<Bill> bills;
 }

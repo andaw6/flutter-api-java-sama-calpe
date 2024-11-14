@@ -3,6 +3,7 @@ package com.ehacdev.flutter_api_java.datas.entities;
 import java.time.LocalDateTime;
 
 import com.ehacdev.flutter_api_java.datas.enums.PersonalInfoStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,6 +15,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "personal_infos")
+@JsonIgnoreProperties({"user"})
 public class PersonalInfo extends BaseEntity{
     @OneToOne
     @JoinColumn(name = "userId", nullable = false, unique = true)

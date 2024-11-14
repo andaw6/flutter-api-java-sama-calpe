@@ -2,10 +2,10 @@ package com.ehacdev.flutter_api_java.datas.entities;
 
 import lombok.*;
 
-import java.math.BigDecimal;
 
 import com.ehacdev.flutter_api_java.datas.enums.TransactionStatus;
 import com.ehacdev.flutter_api_java.datas.enums.TransactionType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
@@ -16,6 +16,7 @@ import jakarta.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "transactions")
+@JsonIgnoreProperties({"sender", "receiver"})
 public class Transaction extends BaseEntity{
     private double amount;
     
@@ -27,8 +28,8 @@ public class Transaction extends BaseEntity{
     @JoinColumn(name = "receiverId")
     private User receiver;
 
-    private BigDecimal feeAmount = BigDecimal.ZERO;
-    
+    private double feeAmount = 0;
+
     private String currency = "XOR";
 
     @Enumerated(EnumType.STRING)

@@ -2,10 +2,14 @@ package com.ehacdev.flutter_api_java.datas.entities;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.ehacdev.flutter_api_java.datas.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,6 +20,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties({"transactions", "received", "bills", "notifications", "contacts", "personalInfo"})
 public class User extends BaseEntity implements UserDetails {
     private String name;
    
@@ -31,32 +36,37 @@ public class User extends BaseEntity implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.CLIENT;
-
+    
     @OneToMany(mappedBy = "sender")
-    private List<Transaction> transactions;
+    private Set<Transaction> transactions;
 
     @OneToMany(mappedBy = "receiver")
-    private List<Transaction> received;
+    private Set<Transaction> received;
 
     @OneToMany(mappedBy = "user")
-    private List<Bill> bills;
+    private Set<Bill> bills;
 
     @OneToOne(mappedBy = "user")
     private Account account;
 
     @OneToMany(mappedBy = "user")
-    private List<Notification> notifications;
+    private Set<Notification> notifications;
 
     @OneToMany(mappedBy = "user")
-    private List<Contact> contacts;
+    private Set<Contact> contacts;
 
     @OneToOne(mappedBy = "user")
     private PersonalInfo personalInfo;
 
+    @Column(unique = true, nullable = false)
+    private String cni;
+   
+    @Column(nullable = false)
+    private String adresse;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Retourne les rôles de l'utilisateur sous forme de GrantedAuthority
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override

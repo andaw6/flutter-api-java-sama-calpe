@@ -1,6 +1,7 @@
 package com.ehacdev.flutter_api_java.datas.entities;
 
 import com.ehacdev.flutter_api_java.datas.enums.NotificationStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,6 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "notifications")
+@JsonIgnoreProperties({"user"})
 public class Notification extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)

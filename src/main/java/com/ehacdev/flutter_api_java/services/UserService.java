@@ -8,4 +8,6 @@ public interface UserService {
     User createClient(ClientRegisterRequestDTO request);
 
     User getUserByPhoneNumber(String phoneNumer);
+
+    User getCurrentUser();
 }

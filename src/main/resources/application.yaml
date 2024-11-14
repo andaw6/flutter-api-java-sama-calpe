@@ -6,15 +6,18 @@ spring:
     enabled: true
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/wave_database
-    username: postgres
-    password: ehacsish
+    # url: jdbc:postgresql://localhost:5432/wave_database
+    # username: postgres
+    # password: ehacsish
+    url: jdbc:postgresql://ep-dark-base-a5vewl3p.us-east-2.aws.neon.tech/neondb
+    username: neondb_owner
+    password: fmNglYu1CJ5K
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    # show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql
 
@@ -26,3 +29,18 @@ spring:
       enabled: true
       max-file-size: 10MB
       max-request-size: 10MB
+
+  web:
+    resources:
+      add-mappings: false
+
+server:
+  address: 0.0.0.0
+  port: 8080
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html

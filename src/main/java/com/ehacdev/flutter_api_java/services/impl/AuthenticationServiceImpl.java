@@ -5,7 +5,10 @@ import java.util.HashMap;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
 
 import com.ehacdev.flutter_api_java.datas.entities.BlacklistedToken;
 import com.ehacdev.flutter_api_java.datas.entities.User;
@@ -75,6 +78,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .token(null) // On renvoie null car l'utilisateur se déconnecte
                 .build();
     }
+
 
     private HashMap<String, Object> getDataForToken(User user) {
         return new HashMap<String, Object>() {

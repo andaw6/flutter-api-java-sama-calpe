@@ -1,5 +1,6 @@
 package com.ehacdev.flutter_api_java.services;
 
+
 import com.ehacdev.flutter_api_java.web.dto.request.AuthenticationRequestDTO;
 import com.ehacdev.flutter_api_java.web.dto.request.ClientRegisterRequestDTO;
 import com.ehacdev.flutter_api_java.web.dto.response.AuthenticationResponseDTO;
@@ -13,4 +14,6 @@ public interface AuthenticationService {
     AuthenticationResponseDTO login(AuthenticationRequestDTO request);
 
     AuthenticationResponseDTO logout(HttpServletRequest request);
+
+   
 }

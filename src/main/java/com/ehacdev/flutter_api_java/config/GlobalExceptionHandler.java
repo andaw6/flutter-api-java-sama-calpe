@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
         response.put("message", "Validation échouée");
         response.put("data", errors);
 
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);  
     }
 
     @ExceptionHandler(Exception.class)

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ehacdev.flutter_api_java.datas.entities.Company;
 
-public interface CompanyRepository extends JpaRepository<Company, UUID> {
 
+public interface CompanyRepository extends JpaRepository<Company, UUID> {
+    Company findByName(String name);
 }

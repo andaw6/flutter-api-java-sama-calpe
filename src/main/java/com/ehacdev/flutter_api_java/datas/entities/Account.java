@@ -2,6 +2,8 @@ package com.ehacdev.flutter_api_java.datas.entities;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,6 +14,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "accounts")
+@JsonIgnoreProperties({"user"})
 public class Account extends BaseEntity{
     @OneToOne
     @JoinColumn(name = "userId", nullable = false, unique = true)
