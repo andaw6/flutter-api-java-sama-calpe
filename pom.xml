@@ -144,7 +144,7 @@
 
 	</dependencies>
 
-	<build>
+	<!-- <build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -161,8 +161,51 @@
 				</configuration>
 			</plugin>
 		</plugins>
-	</build>
+	</build> -->
 
+	<!-- <build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<source>21</source>
+					<target>21</target>
+					<archive>
+						<manifestEntries>
+							<Main-Class>com.ehacdev.flutter_api_java.FlutterApiJavaApplication</Main-Class>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	 -->
+
+
+	 <build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.3.5</version> <!-- Assurez-vous d'utiliser la bonne version de Spring Boot -->
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Main-Class>com.ehacdev.flutter_api_java.FlutterApiJavaApplication</Main-Class>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
 	<!-- <build>
 		<plugins>
 			<plugin>
