@@ -1,5 +1,7 @@
 package com.ehacdev.flutter_api_java.datas.entities;
 
+import java.util.Date;
+
 import com.ehacdev.flutter_api_java.datas.enums.NotificationStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -21,7 +23,12 @@ public class Notification extends BaseEntity{
 
     private String message;
 
-    @Builder.Default
+    @Builder.Default    
     @Enumerated(EnumType.STRING)
     private NotificationStatus isRead = NotificationStatus.UNREAD;
+
+    @Builder.Default
+    @Temporal(TemporalType.TIMESTAMP)
+    protected Date readAt = null;
+
 }

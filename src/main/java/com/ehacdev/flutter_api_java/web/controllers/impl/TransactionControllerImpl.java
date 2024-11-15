@@ -19,10 +19,13 @@ public class TransactionControllerImpl {
 
     private final TransactionService transactionService;
 
-     @GetMapping("current")
+    @GetMapping("current")
     @PreAuthorize("hasRole('CLIENT') or hasRole('VENDOR')")  
     public ResponseEntity<List<TransactionResponseDTO>> getMethodName() {
         return ResponseEntity.ok(transactionService.getTransactionsCurrentUser());
     }
+
+
+    
     
 }

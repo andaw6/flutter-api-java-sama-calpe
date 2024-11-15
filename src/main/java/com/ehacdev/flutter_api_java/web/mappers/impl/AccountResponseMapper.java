@@ -13,7 +13,8 @@ public class AccountResponseMapper {
             entity.isActive(),
             entity.getPlafond(),
             entity.getCreatedAt(),
-            entity.getUpdatedAt()
+            entity.getUpdatedAt(),
+            entity.getUser().getId()
         );
     }
 
