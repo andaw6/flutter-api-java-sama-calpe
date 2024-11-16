@@ -13,7 +13,9 @@ public class UserResponseMapper {
             entity.getPhoneNumber(),
             entity.isActive(),
             entity.getRole(),
-            AccountResponseMapper.toDto(entity.getAccount())
+            AccountResponseMapper.toDto(entity.getAccount()),
+            entity.getCreatedAt(),
+            entity.getUpdatedAt()
         );
     }
 }

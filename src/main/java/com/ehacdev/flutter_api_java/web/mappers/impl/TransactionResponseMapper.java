@@ -7,19 +7,19 @@ import com.ehacdev.flutter_api_java.web.dto.response.TransactionResponseDTO;
 
 public class TransactionResponseMapper {
 
-     public static TransactionResponseDTO toDto(Transaction entity) {
-        return new TransactionResponseDTO(
-            entity.getId(),
-            entity.getAmount(),
-            entity.getFeeAmount(),
-            entity.getCurrency(),
-            entity.getTransactionType(),
-            entity.getCreatedAt(),
-            entity.getUpdatedAt(),
-            UserInfoMapper.toDto(entity.getSender()),
-            Optional.ofNullable(UserInfoMapper.toDto(entity.getReceiver())),
-            Optional.ofNullable(CreditPurchaseMapper.toDto(entity.getCreditPurchase()))
-        );
-    }
-
+    public static TransactionResponseDTO toDto(Transaction entity) {
+       return TransactionResponseDTO.builder()
+           .id(entity.getId())
+           .amount(entity.getAmount())
+           .feeAmount(entity.getFeeAmount())
+           .currency(entity.getCurrency())
+           .type(entity.getTransactionType())
+           .createdAt(entity.getCreatedAt())
+           .updatedAt(entity.getUpdatedAt())
+           .sender(UserInfoMapper.toDto(entity.getSender())) 
+           .receiver(Optional.ofNullable(UserInfoMapper.toDto(entity.getReceiver()))) 
+           .creditPurchase(Optional.ofNullable(CreditPurchaseMapper.toDto(entity.getCreditPurchase()))) 
+           .status(entity.getStatus())
+           .build();
+   }
 }

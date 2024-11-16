@@ -9,7 +9,10 @@ public class CompanyResponseMapper {
         return new CompanyResponseDTO(
             entity.getId(),
             entity.getName(),
-            entity.getIcon()
+            entity.getType(),
+            entity.getIcon(),
+            entity.getCreatedAt(),
+            entity.getUpdatedAt()
         );
     }
 

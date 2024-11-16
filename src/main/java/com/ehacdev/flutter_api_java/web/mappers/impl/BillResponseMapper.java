@@ -7,10 +7,13 @@ public class BillResponseMapper {
     public static BillResponseDTO toDto(Bill entity) {
         return new BillResponseDTO(
             entity.getId(),
+            entity.getUser().getId(),
             entity.getAmount(),
             entity.getCurrency(),
             entity.getStatus(),
-            CompanyResponseMapper.toDto(entity.getCompany())  // Assuming Bill has Company
+            entity.getCreatedAt(),
+            CompanyResponseMapper.toDto(entity.getCompany()),
+            entity.getUpdatedAt()
         );
     }
 

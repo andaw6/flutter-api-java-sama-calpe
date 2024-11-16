@@ -7,13 +7,13 @@ spring:
 
   datasource:
   
-    url: jdbc:postgresql://localhost:5432/wave_database
-    username: postgres
-    password: ehacsish
+    # url: jdbc:postgresql://localhost:5432/wave_database
+    # username: postgres
+    # password: ehacsish
   
-    # url: jdbc:postgresql://ep-dark-base-a5vewl3p.us-east-2.aws.neon.tech/neondb
-    # username: neondb_owner
-    # password: fmNglYu1CJ5K
+    url: jdbc:postgresql://ep-dark-base-a5vewl3p.us-east-2.aws.neon.tech/neondb
+    username: neondb_owner
+    password: fmNglYu1CJ5K
   
     driver-class-name: org.postgresql.Driver
 

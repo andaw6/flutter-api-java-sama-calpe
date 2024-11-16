@@ -10,7 +10,9 @@ public class CreditPurchaseMapper {
         return new CreditPurchaseDTO(
             entity.getReceiverName(),
             entity.getReceiverPhoneNumber(),
-            entity.getReceiverEmail()
+            entity.getReceiverEmail(),
+            entity.getCreatedAt(),
+            entity.getUpdatedAt()
         );
     }
 

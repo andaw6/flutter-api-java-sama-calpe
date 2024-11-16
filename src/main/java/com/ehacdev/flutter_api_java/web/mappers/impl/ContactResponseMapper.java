@@ -10,10 +10,13 @@ public class ContactResponseMapper {
     public static ContactResponseDTO toDto(Contact entity) {
         return new ContactResponseDTO(
             entity.getId(),
+            entity.getUser().getId(),
             entity.getName(),
             Optional.ofNullable(entity.getEmail()),
             entity.getPhoneNumber(),
-            entity.isFavorite()
+            entity.isFavorite(),
+            entity.getCreatedAt(),
+            entity.getUpdatedAt()
         );
     }
 
