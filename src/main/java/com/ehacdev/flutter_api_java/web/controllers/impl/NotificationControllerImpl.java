@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,6 +13,7 @@ import com.ehacdev.flutter_api_java.services.NotificationService;
 import com.ehacdev.flutter_api_java.web.dto.response.NotificationResponseDTO;
 
 import lombok.RequiredArgsConstructor;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -39,4 +41,11 @@ public class NotificationControllerImpl {
         List<NotificationResponseDTO> readNotifications = notificationService.getNotificationsCurrentUserRead();
         return ResponseEntity.ok(readNotifications);
     }
-}
+
+    @GetMapping("/mark/read/{id}")
+    @PreAuthorize("hasRole('CLIENT') or hasRole('VENDOR')")
+    public ResponseEntity<Boolean> markReadNotification(@PathVariable String id) {
+        return ResponseEntity.ok(notificationService.markReadNotification(id));
+    }
+    
+}  

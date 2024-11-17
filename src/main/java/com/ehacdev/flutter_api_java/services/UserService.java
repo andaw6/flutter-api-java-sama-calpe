@@ -10,4 +10,6 @@ public interface UserService {
     User getUserByPhoneNumber(String phoneNumer);
 
     User getCurrentUser();
+
+    User findById(String id);
 }

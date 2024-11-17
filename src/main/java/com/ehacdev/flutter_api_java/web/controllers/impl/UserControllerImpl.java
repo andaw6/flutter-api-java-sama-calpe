@@ -35,4 +35,10 @@ public class UserControllerImpl {
         return ResponseEntity.ok(UserInfoMapper.toDto(userService.getUserByPhoneNumber(phoneNumber)));
     }
 
+    @GetMapping("{id}")
+    @PreAuthorize("hasRole('CLIENT') or hasRole('VENDOR')")
+    public ResponseEntity<UserInfoDTO>  findById(@PathVariable String id){
+        return  ResponseEntity.ok(UserInfoMapper.toDto(userService.findById(id)));
+    }
+
 }

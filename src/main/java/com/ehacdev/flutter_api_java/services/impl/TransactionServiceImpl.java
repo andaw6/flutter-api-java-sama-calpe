@@ -9,7 +9,9 @@ import com.ehacdev.flutter_api_java.datas.repositories.TransactionRepository;
 import com.ehacdev.flutter_api_java.security.AuthService;
 import com.ehacdev.flutter_api_java.services.AccountService;
 import com.ehacdev.flutter_api_java.services.CreditPurchaseService;
+import com.ehacdev.flutter_api_java.services.NotificationService;
 import com.ehacdev.flutter_api_java.services.TransactionService;
+import com.ehacdev.flutter_api_java.utils.Utils;
 import com.ehacdev.flutter_api_java.web.dto.request.CreditRequestDTO;
 import com.ehacdev.flutter_api_java.web.dto.request.TransactionRequestDTO;
 import com.ehacdev.flutter_api_java.web.dto.response.TransactionResponseDTO;
@@ -35,6 +37,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final AccountService accountService;
     private final CreditPurchaseService creditPurchaseService;
+    private final NotificationService notificationService;
 
     @Override
     public List<TransactionResponseDTO> getTransactionsCurrentUser() {
@@ -47,49 +50,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction getTransactionById(String id) {
-        UUID transactionId = parseId(id);
+        UUID transactionId = Utils.convertUUID(id);
         return transactionRepository.findById(transactionId)
                 .orElseThrow(() -> new RuntimeException("Transaction not found."));
-    }
-
-    public UUID parseId(String id) {
-        try {
-            return UUID.fromString(id);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid UUID format.", e);
-        }
-    }
-
-    private Transaction createTransaction(
-            String senderPhoneNumber,
-            String receiverPhoneNumber,
-            TransactionType transactionType,
-            TransactionRequestDTO request) {
-        Map<String, Account> accounts = accountService.validateAccounts(senderPhoneNumber, receiverPhoneNumber);
-        Account senderAccount = accounts.get("sender");
-        Account receiverAccount = accounts.get("receiver");
-        validateAccountAvailability(senderAccount, receiverAccount, transactionType, request);
-        return performTransaction(transactionType, senderPhoneNumber, receiverPhoneNumber, request, senderAccount,
-                receiverAccount);
-    }
-
-    @Transactional
-    private Transaction performTransaction(
-            TransactionType transactionType,
-            String senderPhoneNumber,
-            String receiverPhoneNumber,
-            TransactionRequestDTO request,
-            Account senderAccount,
-            Account receiverAccount) {
-        if (transactionType == TransactionType.WITHDRAW || transactionType == TransactionType.TRANSFER) {
-            accountService.debit(senderPhoneNumber, request.getAmount() + request.getFeeAmount());
-            accountService.credit(receiverPhoneNumber, request.getAmount());
-        } else if (transactionType == TransactionType.DEPOSIT) {
-            accountService.credit(receiverPhoneNumber, request.getAmount());
-            accountService.debit(senderPhoneNumber, request.getAmount() + request.getFeeAmount());
-        }
-        Transaction transaction = buildTransaction(senderAccount, receiverAccount, request, transactionType);
-        return transactionRepository.save(transaction);
     }
 
     @Transactional
@@ -110,9 +73,11 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setStatus(TransactionStatus.COMPLETED);
         transactionRepository.save(transaction);
         creditPurchaseService.save(transaction.getCreditPurchase());
+        notificationService.createNotification("Vous venez d'acheter " + request.getAmount() + "F de crédit au numéro ("
+                + request.getPhone() + ")\n" + "Nouveau solde: "
+                + (senderAccount.getBalance() - (request.getAmount() + request.getFeeAmount())) + "F");
         return TransactionResponseMapper.toDto(transaction);
     }
-
 
     public TransactionResponseDTO processTransaction(TransactionRequestDTO request, TransactionType type) {
         Map<String, String> data = new HashMap<>();
@@ -125,8 +90,88 @@ public class TransactionServiceImpl implements TransactionService {
         }
         Transaction transaction = createTransaction(data.get("senderPhoneNumber"), data.get("receiverPhoneNumber"),
                 type, request);
+
         return TransactionResponseMapper.toDto(transaction);
     }
+
+    
+    private Transaction createTransaction(
+            String senderPhoneNumber,
+            String receiverPhoneNumber,
+            TransactionType transactionType,
+            TransactionRequestDTO request) {
+        Map<String, Account> accounts = accountService.validateAccounts(senderPhoneNumber, receiverPhoneNumber);
+        Account senderAccount = accounts.get("sender");
+        Account receiverAccount = accounts.get("receiver");
+        validateAccountAvailability(senderAccount, receiverAccount, transactionType, request);
+        Transaction transaction = performTransaction(transactionType, senderPhoneNumber, receiverPhoneNumber, request,
+                senderAccount, receiverAccount);
+        transaction.setStatus(TransactionStatus.COMPLETED);
+        transactionRepository.save(transaction);
+        notify(transactionType, request.getAmount(), request.getFeeAmount(), senderAccount, receiverAccount);
+        return transaction;
+    }
+
+    private void notify(TransactionType type, double amount, double feeAmount, Account sender, Account receiver) {
+        String msg0 = null;
+        String msg1 = null;
+        String receiverPhone = receiver.getUser().getPhoneNumber();
+        String senderPhone = sender.getUser().getPhoneNumber();
+        String receiverName = receiver.getUser().getName();
+        String senderName = sender.getUser().getName();
+        double senderBalance = sender.getBalance() - (amount + feeAmount);
+        double receiverBalance = receiver.getBalance() + amount;
+
+        switch (type) {
+            case DEPOSIT:
+                msg0 = "Vous venez d'envoyer " + amount + "F à " + receiverName + " ("
+                        + receiverPhone + ")\n" + "Nouveau solde: "
+                        + senderBalance + "F";
+                msg1 = "Vous venez de recevoir un dépot de " + amount + "F De " + senderName + " ("
+                        + senderPhone + ")\n" + "Nouveau solde: "
+                        + receiverBalance + "F";
+                break;
+            case WITHDRAW:
+                msg1 = "Vous avez d'envoyer " + amount + "F à " + receiverName + " ("
+                        + receiverPhone + ")\n" + "Nouveau solde: "
+                        + senderBalance + "F";
+                msg0 = "Vous venez retirer " + amount + "F sur votre comptes.\n" + "Nouveau solde: "
+                        + receiverBalance + "F";
+                break;
+            case TRANSFER:
+                msg0 = "Vous avez envoyer " + amount + "F à " + receiverName + " ("
+                        + receiverPhone + ")\n" + "Nouveau solde: "
+                        + senderBalance + "F";
+                msg1 = "Vous avez récu " + amount + "F De " + senderName + " ("
+                        + senderPhone + ")\n" + "Nouveau solde: "
+                        + receiverBalance + "F";
+                break;
+            case PURCHASE:
+            default:
+                break;
+        }
+        notificationService.createNotification(msg0);
+        notificationService.createNotification(receiver.getUser(), msg1);
+    }
+
+    @Transactional
+    private Transaction performTransaction(
+            TransactionType transactionType,
+            String senderPhoneNumber,
+            String receiverPhoneNumber,
+            TransactionRequestDTO request,
+            Account senderAccount,
+            Account receiverAccount) {
+        if (transactionType == TransactionType.WITHDRAW || transactionType == TransactionType.TRANSFER) {
+            accountService.debit(senderPhoneNumber, request.getAmount() + request.getFeeAmount());
+            accountService.credit(receiverPhoneNumber, request.getAmount());
+        } else if (transactionType == TransactionType.DEPOSIT) {
+            accountService.credit(receiverPhoneNumber, request.getAmount());
+            accountService.debit(senderPhoneNumber, request.getAmount() + request.getFeeAmount());
+        }
+        return transactionRepository.save(buildTransaction(senderAccount, receiverAccount, request, transactionType));
+    }
+
 
     private void validateAccountAvailability(Account senderAccount, Account receiverAccount,
             TransactionType transactionType, TransactionRequestDTO request) {
@@ -172,8 +217,6 @@ public class TransactionServiceImpl implements TransactionService {
                 .status(TransactionStatus.PENDING)
                 .build();
     }
-
-
 
     private String getUserPhoneKey(TransactionType type) {
         switch (type) {

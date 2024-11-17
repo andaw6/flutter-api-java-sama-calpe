@@ -9,6 +9,7 @@ import com.ehacdev.flutter_api_java.datas.enums.UserRole;
 import com.ehacdev.flutter_api_java.datas.repositories.UserRespository;
 import com.ehacdev.flutter_api_java.security.AuthService;
 import com.ehacdev.flutter_api_java.services.UserService;
+import com.ehacdev.flutter_api_java.utils.Utils;
 import com.ehacdev.flutter_api_java.web.dto.request.ClientRegisterRequestDTO;
 
 import lombok.RequiredArgsConstructor;
@@ -45,5 +46,9 @@ public class UserServiceImpl implements UserService {
     public User getCurrentUser(){
         UserDetails userAuth = authService.userAuth();
         return userRespository.findUserWithRelations(userAuth.getUsername()); 
+    }
+
+    public User findById(String id){
+        return userRespository.findById(Utils.convertUUID(id)).orElse(null);
     }
 }

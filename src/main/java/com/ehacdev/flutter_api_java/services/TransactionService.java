@@ -13,7 +13,6 @@ public interface TransactionService {
 
     List<TransactionResponseDTO> getTransactionsCurrentUser();
 
-     UUID parseId(String id);
 
     Transaction getTransactionById(String id);
 
@@ -22,6 +21,6 @@ public interface TransactionService {
         TransactionType type
     );
 
-    TransactionResponseDTO processTransaction(CreditRequestDTO request)    ;
+    TransactionResponseDTO processTransaction(CreditRequestDTO request);
 
 }
